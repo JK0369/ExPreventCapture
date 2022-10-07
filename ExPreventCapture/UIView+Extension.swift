@@ -14,11 +14,11 @@ extension UIView {
       textField.isSecureTextEntry = true
       
       self.addSubview(textField)
-
       textField.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
       textField.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
       
       // 캡쳐하려는 뷰의 레이어를 textField.layer 사이에 끼워넣기
+      textField.layer.removeFromSuperlayer() // 이 코드가 없으면 run time error (layer 참조 관계에 cycle이 생성되므로)
       self.layer.superlayer?.insertSublayer(textField.layer, at: 0)
       textField.layer.sublayers?.last?.addSublayer(self.layer)
     }
