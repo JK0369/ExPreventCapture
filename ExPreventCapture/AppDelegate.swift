@@ -39,13 +39,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     alert("캡쳐가 감지되었습니다.")
   }
   @objc private func alertRecoding() {
+    // 레코딩이 진행중일때만 alert (= 레코딩이 끝난 경우 alert해주지 않도록 guard)
+    guard UIScreen.main.isCaptured else { return }
     alert("녹화가 감지되었습니다.")
 //    window?.isHidden = UIScreen.main.isCaptured
   }
   
   private func alert(_ title: String) {
-    // 레코딩이 진행중일때만 alert (= 레코딩이 끝난 경우 alert해주지 않도록 guard)
-    guard UIScreen.main.isCaptured else { return }
     let alert = UIAlertController(title: title, message: "", preferredStyle: .alert)
     let confirm = UIAlertAction(title: "확인", style: .cancel, handler: nil)
     alert.addAction(confirm)
