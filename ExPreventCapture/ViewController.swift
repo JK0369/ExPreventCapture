@@ -36,14 +36,15 @@ class ViewController: UIViewController {
     let tableView = UITableView()
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     tableView.translatesAutoresizingMaskIntoConstraints = false
+    tableView.makeSecure() // <-
     return tableView
   }()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    view.backgroundColor = .white
     tableView.dataSource = self
-    tableView.makeSecure()
     
     [label, secureTextField, tableView]
       .forEach(view.addSubview(_:))

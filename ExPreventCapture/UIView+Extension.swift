@@ -17,6 +17,7 @@ extension UIView {
       textField.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
       textField.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
       
+      // 캡쳐하려는 뷰의 레이어를 textField.layer 사이에 끼워넣기
       self.layer.superlayer?.addSublayer(textField.layer)
       textField.layer.sublayers?.first?.addSublayer(self.layer)
     }
@@ -27,12 +28,6 @@ extension UIView {
       let backView = UIView(frame: self.frame)
       backView.backgroundColor = UIColor.lightGray
       self.superview?.insertSubview(backView, at: 0)
-      
-      let label = UILabel()
-      label.text = "Can't Capture"
-      label.textColor = .red
-      label.frame = backView.frame
-      backView.addSubview(label)
       
       self.makeSecure()
     }

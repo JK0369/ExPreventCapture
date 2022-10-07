@@ -9,28 +9,54 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
-
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    // Override point for customization after application launch.
+  var window: UIWindow?
+  
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
+    window = UIWindow(frame: UIScreen.main.bounds)
+    window?.rootViewController = ViewController()
+    window?.makeKeyAndVisible()
+    
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(alertCapture),
+      name: UIApplication.userDidTakeScreenshotNotification,
+      object: nil
+    )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(alertRecoding),
+      name: UIScreen.capturedDidChangeNotification,
+      object: nil
+    )
+    
     return true
   }
-
-  // MARK: UISceneSession Lifecycle
-
-  func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-    // Called when a new scene session is being created.
-    // Use this method to select a configuration to create the new scene with.
-    return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+  
+  @objc private func alertCapture() {
+    alert("캡쳐가 감지되었습니다.")
   }
-
-  func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-    // Called when the user discards a scene session.
-    // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-    // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+  @objc private func alertRecoding() {
+    alert("녹화가 감지되었습니다.")
+//    window?.isHidden = UIScreen.main.isCaptured
   }
-
-
+  
+  private func alert(_ title: String) {
+    // 레코딩이 진행중일때만 alert (= 레코딩이 끝난 경우 alert해주지 않도록 guard)
+    guard UIScreen.main.isCaptured else { return }
+    let alert = UIAlertController(title: title, message: "", preferredStyle: .alert)
+    let confirm = UIAlertAction(title: "확인", style: .cancel, handler: nil)
+    alert.addAction(confirm)
+    
+    if var topController = self.window?.rootViewController {
+      while let presentedViewController = topController.presentedViewController {
+        topController = presentedViewController
+      }
+      DispatchQueue.main.async {
+        topController.present(alert, animated: false, completion: nil)
+      }
+    }
+  }
 }
-
